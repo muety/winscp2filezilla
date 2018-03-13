@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"os/user"
 	"strings"
 
@@ -146,14 +147,18 @@ func getDefaultIniPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return usr.HomeDir + "\\AppData\\Roaming\\winSCP.ini"
+	return usr.HomeDir + "\\AppData\\Roaming\\WinSCP.ini"
 }
 
 func main() {
 	iniPath := flag.String("in", getDefaultIniPath(), fmt.Sprintf("Path to your WinScp.ini (default: %s)", getDefaultIniPath()))
 	outPath := flag.String("out", "sites.xml", fmt.Sprintf("Output path for the resulting XML file. (default: %s)", "sites.xml"))
 
-	flag.PrintDefaults()
+	if len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "--help") {
+		flag.PrintDefaults()
+		return
+	}
+
 	flag.Parse()
 
 	sessions := ReadWinSCPIni(*iniPath)
